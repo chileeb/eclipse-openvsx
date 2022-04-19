@@ -35,6 +35,12 @@ const About: React.FunctionComponent = () => {
             which is also included in
             the <Link color='secondary' href='https://github.com/eclipse/openvsx/packages/324117'>openvsx-webui Docker image</Link>.
         </Typography>
+        <Typography variant='body1' className={classes.paragraph}>
+            This site is hosted in mainland China and it is act as a proxy for open-vsx.org to speed up the extension access for developers in China. 
+            All extensions are copied from open-vsx.org using GitHub action. 
+            The source-code of this site and the Github Action scripts are all open sourced on our GitHub Repo.
+            If you donot want your extension hosted on our site, you can create an <Link color='secondary' href='https://github.com/SmartIDE/eclipse-openvsx/issues'>issue</Link> on our GitHub. 
+        </Typography>
     </Container>;
 };
 

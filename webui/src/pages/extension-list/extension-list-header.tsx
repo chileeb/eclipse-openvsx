@@ -99,8 +99,8 @@ class ExtensionListHeaderComp extends React.Component<ExtensionListHeaderComp.Pr
         super(props);
         this.state = {
             category: '',
-            sortBy: 'relevance',
-            sortOrder: 'desc'
+            sortBy: 'timestamp',
+            sortOrder: 'asc'
         };
     }
 
@@ -180,7 +180,7 @@ class ExtensionListHeaderComp extends React.Component<ExtensionListHeaderComp.Pr
                                 onSearchChanged={this.handleSearchChange}
                                 onSearchSubmit={this.handleSearchSubmit}
                                 searchQuery={this.props.searchQuery}
-                                placeholder='Search by Name, Tag, or Description' />
+                                placeholder='输入名称、标签或描述进行搜索' />
                             <Paper className={classes.category}>
                                 <Select
                                     value={this.state.category}
@@ -196,10 +196,10 @@ class ExtensionListHeaderComp extends React.Component<ExtensionListHeaderComp.Pr
                             </Paper>
                         </Box>
                         <Box className={classes.resultNumAndSortContainer}>
-                            <Box className={classes.resultNum} >{`${this.props.resultNumber} Result${this.props.resultNumber !== 1 ? 's' : ''}`}</Box>
+                            <Box className={classes.resultNum} >{`${this.props.resultNumber} 结果`}</Box>
                             <Box className={classes.resultSort}>
                                 <Box>
-                                    Sort by
+                                    排序：
                                     <Select
                                         style={{ marginLeft: '4px' }}
                                         classes={{ root: classes.resultSortBySelectRoot, select: classes.resultSortBySelect, icon: classes.resultSortBySelectIcon }}

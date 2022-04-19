@@ -95,6 +95,7 @@ export class ExtensionListContainer extends React.Component<ExtensionListContain
 
     render(): React.ReactNode {
         return <Box display='flex' flexDirection='column' >
+            <Box>Warning</Box>
             <ExtensionListHeader
                 resultNumber={this.state.resultNumber}
                 searchQuery={this.state.searchQuery}
