@@ -1,0 +1,185 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openvsx
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: openvsx
+  labels:
+    app: openvsx-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openvsx-db
+  serviceName: db
+  template:
+    metadata:
+      labels:
+        app: openvsx-db
+    spec:
+      containers:
+        - name: db
+          image: postgres
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: openvsx
+            - name: POSTGRES_PASSWORD
+              value: openvsx
+            - name: POSTGRES_DB
+              value: openvsx
+          volumeMounts:
+            - name: db
+              mountPath: /var/lib/postgresql
+  volumeClaimTemplates:
+    - metadata:
+        name: db
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: openvsx
+  labels:
+    app: openvsx-db
+spec:
+  selector:
+    app: openvsx-db
+  ports:
+    - name: postgres
+      port: 5432
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openvsx-config
+  namespace: openvsx
+data:
+  application.yml: |-
+    spring:
+      datasource:
+        url: jdbc:postgresql://db:5432/openvsx
+        username: openvsx
+        password: openvsx
+      jpa:
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+          ddl-auto: none
+      session:
+        store-type: jdbc
+        jdbc:
+          initialize-schema: never
+      security:
+        oauth2:
+          client:
+            registration:
+              github:
+                clientId: a61cb34fb088e1a7ba0c
+                clientSecret: aa9c2dfe1aa0e1f979dee10198709b784f5af534
+
+    ovsx:
+      elasticsearch:
+        enabled: false
+      databasesearch:
+        enabled: true
+      upstream:
+        url: https://open-vsx.org/
+      webui:
+        url: http://smartideopenvsx.southeastasia.cloudapp.azure.com
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openvsx
+  namespace: openvsx
+spec:
+  selector:
+    matchLabels:
+      app: openvsx
+  template:
+    metadata:
+      labels:
+        app: openvsx
+    spec:
+      containers:
+        - name: openvsx
+          image: ghcr.io/eclipse/openvsx-server:a77dc99
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+              name: openvsx
+          volumeMounts:
+            - name: config
+              mountPath: /home/openvsx/server/config/application.yml
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: openvsx-config
+            items:
+              - key: application.yml
+                path: application.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openvsx
+  namespace: openvsx
+spec:
+  selector:
+    app: openvsx
+  ports:
+    - name: openvsx
+      port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openvsx
+  namespace: openvsx
+  labels:
+    name: openvsx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - smartideopenvsx.southeastasia.cloudapp.azure.com
+      secretName: certificate-openvsx
+  rules:
+    - host: smartideopenvsx.southeastasia.cloudapp.azure.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: openvsx
+                port:
+                  name: openvsx

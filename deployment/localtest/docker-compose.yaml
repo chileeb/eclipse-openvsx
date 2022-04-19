@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:12.2
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /Users/weizhenlong/postgresqldata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+ 
+  pgadmin:
+    image: dpage/pgadmin4:4.18
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8090:80"
+    volumes:
+      - /Users/weizhenlong/pgadmin-data:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+
+  server:
+    image: smartide-openvsx:3 
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./configurations:/home/openvsx/server/config
+    links:
+      - "db:pgsql-server"
+      
+  web:
+    image: ghcr.io/eclipse/openvsx-webui:a77dc99
+    ports:
+      - "3000:3000"
+
+volumes:
+  db-data:
+  pgadmin-data:
