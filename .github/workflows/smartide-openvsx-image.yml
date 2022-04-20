@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: SmartIDE-OpenVSX-Image-Build-CI
 
 on:
   push:
