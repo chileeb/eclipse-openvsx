@@ -28,7 +28,7 @@ services:
       - "db:pgsql-server"
 
   server:
-    image: smartideopenvsx.azurecr.io/smartide-openvsx:4
+    image: smartide/smartide-openvsx:6fe7f35
     ports:
       - "8080:8080"
     volumes:
