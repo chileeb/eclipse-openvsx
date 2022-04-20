@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Image
+      run: docker build -t $IMAGE_NAME:$IMAGE_VERSION deployment/smartide-image
+    - name: Push DockerHub
+      run: |
+        echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u $DOCKER_HUB_LOGIN --password-stdin
+        docker push $IMAGE_NAME:$IMAGE_VERSION
+    - name: Aliyun Image Tags
+      run: |
+        echo ${{ secrets.DockerHubPassword }} | docker login -u $DockerHubLogin --password-stdin
+        docker tag $IMAGE_NAME:$IMAGE_VERSION $ALIYUN_IMAGE_REGISTRY/$IMAGE_REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_VERSION
+    - name: Push Aliyun
+      run: |
+        echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login $ALIYUN_IMAGE_REGISTRY -u $DOCKER_HUB_LOGIN --password-stdin
+        docker push $ALIYUN_IMAGE_REGISTRY/$IMAGE_REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_VERSION
