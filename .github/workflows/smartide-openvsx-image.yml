@@ -23,6 +23,9 @@ jobs:
       run: echo "IMAGE_VERSION=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
     - name: Build Image
       run: docker build -t $IMAGE_NAME:$IMAGE_VERSION deployment/smartide-image
+    - name: DockerHub Image Tags
+      run: |
+        docker tag $IMAGE_NAME:$IMAGE_VERSION $IMAGE_REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_VERSION
     - name: Push DockerHub
       run: |
         echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login -u ${{ secrets.DOCKER_HUB_LOGIN }} --password-stdin
