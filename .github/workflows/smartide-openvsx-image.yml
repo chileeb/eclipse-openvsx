@@ -22,9 +22,8 @@ jobs:
         docker push $IMAGE_NAME:$IMAGE_VERSION
     - name: Aliyun Image Tags
       run: |
-        echo ${{ secrets.DockerHubPassword }} | docker login -u $DockerHubLogin --password-stdin
         docker tag $IMAGE_NAME:$IMAGE_VERSION $ALIYUN_IMAGE_REGISTRY/$IMAGE_REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_VERSION
     - name: Push Aliyun
       run: |
-        echo ${{ secrets.DOCKER_HUB_PASSWORD }} | docker login $ALIYUN_IMAGE_REGISTRY -u $DOCKER_HUB_LOGIN --password-stdin
+        echo ${{ secrets.ALIYUN_PASSWORD }} | docker login $ALIYUN_IMAGE_REGISTRY -u $DOCKER_HUB_LOGIN --password-stdin
         docker push $ALIYUN_IMAGE_REGISTRY/$IMAGE_REGISTRY_NAMESPACE/$IMAGE_NAME:$IMAGE_VERSION
