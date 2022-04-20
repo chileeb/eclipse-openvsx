@@ -2,9 +2,13 @@ name: SmartIDE-OpenVSX-Image-Build-CI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: 
+      - master
+      - 'deployment/smartide-image/**'
+    pull_request:
+    branches:
+      - master
+      - 'deployment/smartide-image/**'
 
 env:
   IMAGE_NAME: smartide-openvsx
