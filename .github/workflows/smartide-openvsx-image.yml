@@ -2,6 +2,8 @@ name: SmartIDE-OpenVSX-Image-Build-CI
 
 on:
   push:
+    branches:    
+      - 'master'
     paths: 
       - 'deployment/smartide-image/**'
 

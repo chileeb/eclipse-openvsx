@@ -2,6 +2,8 @@ name: SmartIDE-OpenVSX-Deployment
 
 on:
   push:
+    branches:    
+      - 'master'
     paths: 
       - 'deployment/openvsx/**'
 
