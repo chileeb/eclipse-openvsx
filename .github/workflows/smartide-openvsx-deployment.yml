@@ -6,7 +6,7 @@ on:
       - master
     paths: 
       - deployment/openvsx/**
-      -.github/workflows/smartide-openvsx-deployment.yml
+      - .github/workflows/smartide-openvsx-deployment.yml
 
 jobs:
 
