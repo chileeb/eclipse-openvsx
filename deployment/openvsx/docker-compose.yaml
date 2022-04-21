@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: admin
       PGDATA: /var/lib/postgresql/data
     volumes:
-      - /home/localadmin/project/postgresqldata:/var/lib/postgresql/data
+      - /openvsx/project/postgresqldata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
  
@@ -23,7 +23,7 @@ services:
     ports:
       - "8090:80"
     volumes:
-      - /home/localadmin/project/pgadmin-data:/var/lib/pgadmin
+      - /openvsx/pgadmin-data:/var/lib/pgadmin
     links:
       - "db:pgsql-server"
 
@@ -32,7 +32,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./configurations:/home/openvsx/server/config
+      - /openvsx/configurations:/home/openvsx/server/config
     links:
       - "db:pgsql-server"
 
@@ -40,8 +40,8 @@ services:
     image: nginx:latest
     restart: unless-stopped
     volumes:
-      - ~/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ~/nginx/ssl:/ssl/
+      - /openvsx/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /openvsx/nginx/ssl:/ssl/
     ports:
       - 80:80
       - 443:443
