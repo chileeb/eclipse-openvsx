@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: admin
       PGDATA: /var/lib/postgresql/data
     volumes:
-      - /openvsx/project/postgresqldata:/var/lib/postgresql/data
+      - /openvsx/postgresqldata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
  
