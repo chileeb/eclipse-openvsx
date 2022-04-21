@@ -13,44 +13,44 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Copy Deploy Content to remote
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: deployment/openvsx
-          remote: /openvsx
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_SSH_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+    - name: Github deploy scp
+      uses: dj-256/github-deploy@1.1.0        
+      with:
+        local: deployment/openvsx
+        remote: /openvsx
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
     - name: Add Nginx SSL Cert
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_SSH_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            mkdir /openvsx/nginx/ssl
-            cd /openvsx/nginx/ssl
-            output=ssl_cert.crt
-            echo ${{ secrets.NGINX_SSL_CERT }} > $output
-            output=ssl_key.key
-            echo ${{ secrets.NGINX_SSL_KEY }} > $output
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          mkdir /openvsx/nginx/ssl
+          cd /openvsx/nginx/ssl
+          output=ssl_cert.crt
+          echo ${{ secrets.NGINX_SSL_CERT }} > $output
+          output=ssl_key.key
+          echo ${{ secrets.NGINX_SSL_KEY }} > $output
     - name: Deploy Docker-Compose via SSH action
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_SSH_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: |
-            # Stop all running Docker Containers
-            docker kill $(docker ps -q)
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          # Stop all running Docker Containers
+          docker kill $(docker ps -q)
 
-            # Free up space
-            docker system prune -a --force
+          # Free up space
+          docker system prune -a --force
 
-            # Run docker UI
-            docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer 
-            
-            cd /openvsx
+          # Run docker UI
+          docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer 
 
-            # docker-compose up
-            docker-compose -p openvsx up -d
+          cd /openvsx
+
+          # docker-compose up
+          docker-compose -p openvsx up -d
