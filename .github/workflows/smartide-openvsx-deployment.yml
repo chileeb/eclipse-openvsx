@@ -37,6 +37,15 @@ jobs:
           echo -e "${{ secrets.NGINX_SSL_CERT }}" > $output
           output=ssl_key.key
           echo -e "${{ secrets.NGINX_SSL_KEY }}" > $output
+    - name: Create pgadmin-data Gaint Permission
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          mkdir ~/openvsx/pgadmin-data
+          sudo chown -R 5050:5050 ~/openvsx/pgadmin-data
     - name: Deploy Docker-Compose via SSH action
       uses: appleboy/ssh-action@master
       with:
@@ -48,7 +57,7 @@ jobs:
           docker kill $(docker ps -q)
 
           # Free up space
-          docker system prune -a --force
+          docker system prune --force
 
           # Run docker UI
           docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer 
