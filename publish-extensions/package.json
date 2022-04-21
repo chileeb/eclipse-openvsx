@@ -21,7 +21,8 @@
   "main": "publish-extensions",
   "scripts": {
     "download": "node download-extensions.js",
-    "publish": "OVSX_PAT=8bc038f8-6bfb-4b80-9c79-51ca44d5f388 OVSX_REGISTRY_URL=https://marketplace.smartide.cn node publish-extensions.js"
+    "publish": "OVSX_PAT=66e050fb-6cef-4f14-859e-a9262a7a1c2f OVSX_REGISTRY_URL=https://marketplace.smartide.cn node publish-extensions.js",
+    "sync": "OVSX_PAT=66e050fb-6cef-4f14-859e-a9262a7a1c2f OVSX_REGISTRY_URL=https://marketplace.smartide.cn node sync-extensions.js"
   },
   "dependencies": {
     "ovsx": "latest",
