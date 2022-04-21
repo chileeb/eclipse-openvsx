@@ -32,7 +32,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ~/openvsx/configurations:/home/openvsx/server/config
+      - ~/openvsx/deployment/openvsx/configurations:/home/openvsx/server/config
     links:
       - "db:pgsql-server"
 
@@ -40,8 +40,8 @@ services:
     image: nginx:latest
     restart: unless-stopped
     volumes:
-      - ~/openvsx/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ~/openvsx/nginx/ssl:/ssl/
+      - ~/openvsx/deployment/openvsx/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ~/openvsx/deployment/openvsx/nginx/ssl:/ssl/
     ports:
       - 80:80
       - 443:443

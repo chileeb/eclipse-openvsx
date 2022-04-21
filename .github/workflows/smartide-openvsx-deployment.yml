@@ -31,8 +31,8 @@ jobs:
         username: ${{ secrets.SERVER_SSH_USER }}
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
-          mkdir ~/openvsx/nginx/ssl
-          cd ~/openvsx/nginx/ssl
+          mkdir ~/openvsx/deployment/openvsx/nginx/ssl
+          cd ~/openvsx/deployment/openvsx/nginx/ssl
           output=ssl_cert.crt
           echo ${{ secrets.NGINX_SSL_CERT }} > $output
           output=ssl_key.key
@@ -53,7 +53,7 @@ jobs:
           # Run docker UI
           docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer 
 
-          cd ~/openvsx
+          cd ~/openvsx/deployment/openvsx
 
           # docker-compose up
           docker-compose -p openvsx up -d
