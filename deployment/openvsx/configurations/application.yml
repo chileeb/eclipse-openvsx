@@ -5,9 +5,9 @@ spring:
   profiles:
     include: ovsx
   datasource:
-    url: jdbc:postgresql://pgsql-server:5432/postgres
-    username: admin
-    password: admin
+    url: jdbc:postgresql://pgsql-server:5432/#{DATABASE}#
+    username: #{DATABASE_USERNAME}#
+    password: #{DATABASE_PASSWORD}#
   jpa:
     properties:
       hibernate:
@@ -24,8 +24,8 @@ spring:
         client:
           registration:
             github:
-              client-id: a61cb34fb088e1a7ba0c
-              client-secret: aa9c2dfe1aa0e1f979dee10198709b784f5af534
+              client-id: #{GITHUB_CLIENT_ID}#
+              client-secret: #{GITHUB_CLIENT_SECRET}#
 
 management:
   health:
@@ -45,5 +45,5 @@ ovsx:
     url: https://marketplace.smartide.cn
   storage:
     azure:
-      service-endpoint: https://smarideopenvsx.blob.core.windows.net/
-      sas-token: ?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2023-01-01T01:06:01Z&st=2022-02-28T17:06:01Z&spr=https,http&sig=fkVGM5xOlvoS0y68N8E%2BuPFSUl4XuuXozQd2l17tsp4%3D
+      service-endpoint: #{STORAGE_SERVICE_ENDPOINT}#
+      sas-token: #{STORAGE_SAS_TOKEN}#

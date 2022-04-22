@@ -92,18 +92,16 @@ data:
           client:
             registration:
               github:
-                clientId: a61cb34fb088e1a7ba0c
-                clientSecret: aa9c2dfe1aa0e1f979dee10198709b784f5af534
+                clientId: github-clientId
+                clientSecret: github-clientSecret
 
     ovsx:
       elasticsearch:
         enabled: false
       databasesearch:
         enabled: true
-      upstream:
-        url: https://open-vsx.org/
       webui:
-        url: http://smartideopenvsx.southeastasia.cloudapp.azure.com
+        url: https://marketplace.smaride.cn
 
 ---
 apiVersion: apps/v1
@@ -170,10 +168,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - smartideopenvsx.southeastasia.cloudapp.azure.com
+        - marketplace.smartide.cn
       secretName: certificate-openvsx
   rules:
-    - host: smartideopenvsx.southeastasia.cloudapp.azure.com
+    - host: marketplace.smartide.cn
       http:
         paths:
           - pathType: Prefix
