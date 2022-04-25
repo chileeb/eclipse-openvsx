@@ -96,7 +96,7 @@ export class ExtensionListContainer extends React.Component<ExtensionListContain
     render(): React.ReactNode {
         return <Box display='flex' flexDirection='column' >
             <Box className='MuiContainer-root' color='sienna' marginTop='10px' >本站点为open-vsx.org的中国大陆镜像站点，为国内开发者提供插件安装加速服务。本站点上托管的插件全部通过 GitHub Action 从 open-vsx.org 上复制过来；本站点所使用的源码以及 GitHub Action 脚本都通过 GitHub 开源提供给社区免费使用。如果你不希望自己的插件在我们的站点上出现，可以通过提交
-               <a target='_blank' rel='noreferrer' href='https://github.com/SmartIDE/eclipse-openvsx/issues' color='sienna'> Issue</a> 与我们联系。
+               <a target='_blank' rel='noreferrer' href='https://github.com/SmartIDE/SmartIDE/issues' color='sienna'> Issue</a> 与我们联系。
             </Box>
             <ExtensionListHeader
                 resultNumber={this.state.resultNumber}

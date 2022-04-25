@@ -29,7 +29,7 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
         }
     });
     const toolbarContent: React.FunctionComponent = () =>
-        <RouteLink to={ExtensionListRoutes.MAIN} aria-label={`Home - Open VSX Registry China Proxy`}>
+        <RouteLink to={ExtensionListRoutes.MAIN} aria-label={`Home - SmartIDE Marketplace`}>
             <OpenVSXLogo prefersDarkMode={prefersDarkMode} className={toolbarStyle().logo} />
         </RouteLink>;
 
@@ -64,13 +64,13 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
         <Box className={footerStyle().wrapper}>
             <Link
                 target='_blank'
-                href='https://github.com/SmartIDE/eclipse-openvsx'
+                href='https://github.com/SmartIDE/SmartIDE'
                 className={`${footerStyle().link} ${footerStyle().repositoryLink}`} >
-                <GitHubIcon />&nbsp;SmartIDE/eclipse-openvsx
+                <GitHubIcon />&nbsp;SmartIDE/SmartIDE
             </Link>
-            <RouteLink to='/about' className={footerStyle().link}>
-                关于此站
-            </RouteLink>
+            <Link href='https://smartide.cn/zh/about' className={footerStyle().link}>
+                关于我们
+            </Link>
         </Box>;
 
     const searchStyle = makeStyles({
@@ -90,7 +90,7 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
         <Route path='/about' render={() => <About />} />;
 
     return {
-        pageTitle: 'Open VSX Registry China Proxy',
+        pageTitle: 'SmartIDE Marketplace (基于Eclipse OpenVSX)',
         themeType: prefersDarkMode ? 'dark' : 'light',
         elements: {
             toolbarContent,

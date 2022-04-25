@@ -56,7 +56,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
         const classes = this.props.classes;
         return <React.Fragment>
             <MenuItem className={classes.menuItem}>
-                <Link target='_blank' href='https://github.com/eclipse/openvsx'>
+                <Link target='_blank' href='https://github.com/SmartIDE/eclipse-openvsx'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <GitHubIcon className={classes.itemIcon} />
                         源代码
@@ -64,7 +64,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 </Link>
             </MenuItem>
             <MenuItem className={classes.menuItem}>
-                <Link href='https://github.com/eclipse/openvsx/wiki'>
+                <Link href='https://smartide.cn/zh/docs/overview/marketplace'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <MenuBookIcon className={classes.itemIcon} />
                         文档
@@ -72,7 +72,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 </Link>
             </MenuItem>
             <MenuItem className={classes.menuItem}>
-                <Link href='https://gitter.im/eclipse/openvsx'>
+                <Link href='https://smartide.cn/zh/community'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <ForumIcon className={classes.itemIcon} />
                         社区
@@ -80,10 +80,18 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 </Link>
             </MenuItem>
             <MenuItem className={classes.menuItem}>
-                <RouteLink to='/about'>
+                <Link href='https://smartide.cn/zh/services/marketplace/ '>
+                    <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
+                        <ForumIcon className={classes.itemIcon} />
+                        私有部署服务
+                    </Typography>
+                </Link>
+            </MenuItem>
+            <MenuItem className={classes.menuItem}>
+                <RouteLink to='https://smartide.cn/zh/about/'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <InfoIcon className={classes.itemIcon} />
-                        关于此站
+                        关于我们
                     </Typography>
                 </RouteLink>
             </MenuItem>
@@ -100,15 +108,18 @@ export class DefaultMenuConentComponent extends React.Component<WithStyles<typeo
     render(): React.ReactElement {
         const classes = this.props.classes;
         return <React.Fragment>
-            <Link href='https://github.com/eclipse/openvsx/wiki' className={classes.headerItem}>
+            <Link href='https://smartide.cn/zh/docs/overview/marketplace' className={classes.headerItem}>
                 文档
             </Link>
-            <Link href='https://gitter.im/eclipse/openvsx' className={classes.headerItem}>
+            <Link href='https://smartide.cn/zh/community' className={classes.headerItem}>
                 社区
             </Link>
-            <RouteLink to='/about' className={classes.headerItem}>
+            <Link href='https://smartide.cn/zh/services/marketplace' className={classes.headerItem}>
+                私有部署服务
+            </Link>
+            <Link href='https://smartide.cn/zh/about' className={classes.headerItem}>
                 关于我们
-            </RouteLink>
+            </Link>
         </React.Fragment>;
     }
 }
