@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    include: ovsx
+  datasource:
+    url: jdbc:postgresql://pgsql-server:5432/#{DATABASE}#
+    username: #{DATABASE_USERNAME}#
+    password: #{DATABASE_PASSWORD}#
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: never
+
+  security:
+      oauth2:
+        client:
+          registration:
+            github:
+              client-id: #{OAUTH_CLIENT_ID}#
+              client-secret: #{OAUTH_CLIENT_SECRET}#
+
+management:
+  health:
+    probes:
+      enabled: true
+
+ovsx:
+  databasesearch:
+    enabled: true
+  elasticsearch:
+    enabled: false
+  eclipse:
+    base-url: https://api.eclipse.org
+    publisher-agreement:
+      timezone: US/Eastern
+  webui:
+    url: https://marketplace.smartide.cn
+  storage:
+    azure:
+      service-endpoint: #{STORAGE_SERVICE_ENDPOINT}#
+      sas-token: #{STORAGE_SAS_TOKEN}#

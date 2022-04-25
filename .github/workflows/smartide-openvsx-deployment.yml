@@ -1,0 +1,81 @@
+name: SmartIDE-OpenVSX-Deployment
+
+on:
+  push:
+    branches:    
+      - master
+    paths: 
+      - deployment/openvsx/**
+      - .github/workflows/smartide-openvsx-deployment.yml
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cschleiden/replace-tokens@v1
+      with:
+        files: '["deployment/openvsx/configurations/application.yml","deployment/openvsx/docker-compose.yaml"]'
+      env:
+        DATABASE: ${{ secrets.DATABASE }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+        OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+        STORAGE_SERVICE_ENDPOINT: ${{ secrets.STORAGE_SERVICE_ENDPOINT }}
+        STORAGE_SAS_TOKEN: ${{ secrets.STORAGE_SAS_TOKEN }}
+        PGADMIN_USERNAME: ${{ secrets.PGADMIN_USERNAME }}
+        PGADMIN_PASSWORD: ${{ secrets.PGADMIN_PASSWORD }}
+    - name: Github deploy scp
+      uses: appleboy/scp-action@master      
+      with:
+        source: deployment/openvsx/*
+        target: ~/openvsx
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+    - name: Add Nginx SSL Cert
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          mkdir ~/openvsx/deployment/openvsx/nginx/ssl
+          cd ~/openvsx/deployment/openvsx/nginx/ssl
+          output=ssl_cert.crt
+          echo -e "${{ secrets.NGINX_SSL_CERT }}" > $output
+          output=ssl_key.key
+          echo -e "${{ secrets.NGINX_SSL_KEY }}" > $output
+    - name: Create pgadmin-data Gaint Permission
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          mkdir ~/openvsx/pgadmin-data
+          sudo chown -R 5050:5050 ~/openvsx/pgadmin-data
+    - name: Deploy Docker-Compose via SSH action
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          # Stop all running Docker Containers
+          docker kill $(docker ps -q)
+
+          # Free up space
+          docker system prune --force
+
+          # Run docker UI
+          docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer 
+
+          cd ~/openvsx/deployment/openvsx
+
+          # docker-compose up
+          docker-compose -p openvsx up -d

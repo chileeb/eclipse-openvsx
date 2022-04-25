@@ -59,7 +59,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 <Link target='_blank' href='https://github.com/eclipse/openvsx'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <GitHubIcon className={classes.itemIcon} />
-                        Source Code
+                        源代码
                     </Typography>
                 </Link>
             </MenuItem>
@@ -67,7 +67,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 <Link href='https://github.com/eclipse/openvsx/wiki'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <MenuBookIcon className={classes.itemIcon} />
-                        Documentation
+                        文档
                     </Typography>
                 </Link>
             </MenuItem>
@@ -75,7 +75,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 <Link href='https://gitter.im/eclipse/openvsx'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <ForumIcon className={classes.itemIcon} />
-                        Community Chat
+                        社区
                     </Typography>
                 </Link>
             </MenuItem>
@@ -83,7 +83,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 <RouteLink to='/about'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <InfoIcon className={classes.itemIcon} />
-                        About This Service
+                        关于此站
                     </Typography>
                 </RouteLink>
             </MenuItem>
@@ -101,13 +101,13 @@ export class DefaultMenuConentComponent extends React.Component<WithStyles<typeo
         const classes = this.props.classes;
         return <React.Fragment>
             <Link href='https://github.com/eclipse/openvsx/wiki' className={classes.headerItem}>
-                Documentation
+                文档
             </Link>
             <Link href='https://gitter.im/eclipse/openvsx' className={classes.headerItem}>
-                Community
+                社区
             </Link>
             <RouteLink to='/about' className={classes.headerItem}>
-                About
+                关于我们
             </RouteLink>
         </React.Fragment>;
     }

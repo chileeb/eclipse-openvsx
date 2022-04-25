@@ -29,7 +29,7 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
         }
     });
     const toolbarContent: React.FunctionComponent = () =>
-        <RouteLink to={ExtensionListRoutes.MAIN} aria-label={`Home - Open VSX Registry`}>
+        <RouteLink to={ExtensionListRoutes.MAIN} aria-label={`Home - Open VSX Registry China Proxy`}>
             <OpenVSXLogo prefersDarkMode={prefersDarkMode} className={toolbarStyle().logo} />
         </RouteLink>;
 
@@ -64,12 +64,12 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
         <Box className={footerStyle().wrapper}>
             <Link
                 target='_blank'
-                href='https://github.com/eclipse/openvsx'
+                href='https://github.com/SmartIDE/eclipse-openvsx'
                 className={`${footerStyle().link} ${footerStyle().repositoryLink}`} >
-                <GitHubIcon />&nbsp;eclipse/openvsx
+                <GitHubIcon />&nbsp;SmartIDE/eclipse-openvsx
             </Link>
             <RouteLink to='/about' className={footerStyle().link}>
-                About This Service
+                关于此站
             </RouteLink>
         </Box>;
 
@@ -83,14 +83,14 @@ export default function createPageSettings(theme: Theme, prefersDarkMode: boolea
     });
     const searchHeader: React.FunctionComponent = () =>
         <Typography variant='h4' classes={{ root: searchStyle().typography }}>
-            Extensions for VS Code Compatible Editors
+            兼容VSCode标准IDE可用插件
         </Typography>;
 
     const additionalRoutes: React.FunctionComponent = () =>
         <Route path='/about' render={() => <About />} />;
 
     return {
-        pageTitle: 'Open VSX Registry',
+        pageTitle: 'Open VSX Registry China Proxy',
         themeType: prefersDarkMode ? 'dark' : 'light',
         elements: {
             toolbarContent,

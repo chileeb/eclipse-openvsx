@@ -182,8 +182,8 @@ class MainComponent extends React.Component<MainComponent.Props, MainComponent.S
                                             :
                                             <IconButton
                                                 href={this.props.service.getLoginUrl()}
-                                                title='Log In'
-                                                aria-label='Log In' >
+                                                title='登陆'
+                                                aria-label='登陆' >
                                                 <AccountBoxIcon />
                                             </IconButton>
                                     }

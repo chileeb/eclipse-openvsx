@@ -1,0 +1,39 @@
+{
+  "name": "publish-extensions",
+  "version": "0.0.0",
+  "description": "CI for publishing VS Code extensions to marketplace",
+  "homepage": "https://marketplace.smartide.cn",
+  "license": " GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/SmartIDE/smartide-marketplace/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SmartIDE/smartide-marketplace"
+  },
+  "contributors": [
+    {
+      "name": "leansoftx",
+      "url": "https://leansoftx.com"
+    }
+  ],
+  "bin": "bin/publish-extensions",
+  "main": "publish-extensions",
+  "scripts": {
+    "download": "node download-extensions.js",
+    "publish": "OVSX_PAT=66e050fb-6cef-4f14-859e-a9262a7a1c2f OVSX_REGISTRY_URL=https://marketplace.smartide.cn node publish-extensions.js",
+    "sync": "OVSX_PAT=66e050fb-6cef-4f14-859e-a9262a7a1c2f OVSX_REGISTRY_URL=https://marketplace.smartide.cn node sync-extensions.js"
+  },
+  "dependencies": {
+    "ovsx": "latest",
+    "semver": "^7.1.3",
+    "vsce": "^2.3.0",
+    "rimraf": "^3.0.2",
+    "mkdirp": "^1.0.4",
+    "fs-extra": "^10.0.0",
+    "debug": "^4.3.3",
+    "got": "^11.8.3",
+    "urllib": "^2.38.0",
+    "await-event": "^2.1.0"
+  }
+}

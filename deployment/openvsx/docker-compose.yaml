@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:12.2
+    restart: always
+    environment:
+      POSTGRES_DB: #{DATABASE}#
+      POSTGRES_USER: #{DATABASE_USERNAME}#
+      POSTGRES_PASSWORD: #{DATABASE_PASSWORD}#
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - ~/openvsx/postgresqldata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+ 
+  pgadmin:
+    image: dpage/pgadmin4:4.18
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: #{PGADMIN_USERNAME}#
+      PGADMIN_DEFAULT_PASSWORD: #{PGADMIN_PASSWORD}#
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8090:80"
+    volumes:
+      - ~/openvsx/pgadmin-data:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+
+  server:
+    image: smartide/smartide-openvsx:6fe7f35
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/openvsx/deployment/openvsx/configurations:/home/openvsx/server/config
+    links:
+      - "db:pgsql-server"
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ~/openvsx/deployment/openvsx/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ~/openvsx/deployment/openvsx/nginx/ssl:/ssl/
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - "server:openvsx-server"
+
+volumes:
+  db-data:
+  pgadmin-data:

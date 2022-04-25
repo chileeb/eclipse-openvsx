@@ -313,16 +313,10 @@ export class ExtensionDetailComponent extends React.Component<ExtensionDetailCom
             return <Paper className={`${classes.banner} ${warningClass} ${themeClass}`}>
                 <WarningIcon fontSize='large' />
                 <Box ml={1}>
-                    This version of the &ldquo;{extension.displayName || extension.name}&rdquo; extension was published
-                    by <Link href={extension.publishedBy.homepage}>
-                        {extension.publishedBy.loginName}
-                    </Link>. That user account is not a verified publisher of
-                    the namespace &ldquo;{extension.namespace}&rdquo; of
-                    this extension. <Link
-                        href={this.context.pageSettings.urls.namespaceAccessInfo}
-                        target='_blank' >
-                        See the documentation
-                    </Link> to learn how we handle namespaces and what you can do to eliminate this warning.
+                    这是open-vsx.org的中国大陆镜像站点，为国内开发者提供插件安装加速服务。
+                    本站点上托管的插件全部通过 GitHub Action 从 open-vsx.org 上复制过来；
+                    本站点所使用的源码以及 GitHub Action 脚本都通过 GitHub 开源提供给社区免费使用。
+                    如果你不希望自己的插件在我们的站点上出现，可以通过提交 <Link href='https://github.com/SmartIDE/eclipse-openvsx/issues' target='_blank'>Issue</Link> 与我们联系。
                 </Box>
             </Paper>;
         }
