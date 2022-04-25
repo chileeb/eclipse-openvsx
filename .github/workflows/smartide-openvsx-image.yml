@@ -6,6 +6,7 @@ on:
       - master
     paths: 
       - deployment/smartide-image/**
+      - .github/workflows/smartide-openvsx-image.yml
 
 env:
   IMAGE_NAME: smartide-openvsx
