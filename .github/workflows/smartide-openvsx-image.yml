@@ -3,7 +3,7 @@ name: SmartIDE-OpenVSX-Image-Build-CI
 on:
   push:
     branches:    
-      - master
+      - smartide-marketplace
     paths: 
       - deployment/smartide-image/**
       - .github/workflows/smartide-openvsx-image.yml
