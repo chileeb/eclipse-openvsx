@@ -3,7 +3,7 @@ name: SmartIDE-Openvsx-Extensions-Sync
 on:
   push:
     branches:    
-      - master
+      - smartide-marketplace
     paths: 
       - publish-extensions/sync-extensions.js
       - .github/workflows/smartide-openvsx-extensions-sync.yml
@@ -16,6 +16,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: cschleiden/replace-tokens@v1
+      with:
+        files: '["publish-extensions/package.json"]'
+      env:
+        OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        OVSX_REGISTRY_URL: ${{ secrets.OVSX_REGISTRY_URL }}
     - name: Setup Node
       uses: actions/setup-node@v2
       with:
