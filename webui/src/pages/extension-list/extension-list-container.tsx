@@ -32,8 +32,8 @@ export class ExtensionListContainer extends React.Component<ExtensionListContain
             searchQuery: '',
             category: '',
             resultNumber: 0,
-            sortBy: 'relevance',
-            sortOrder: 'desc',
+            sortBy: 'timestamp',
+            sortOrder: 'asc',
             searchDebounceTime: 0
         };
     }
@@ -48,8 +48,8 @@ export class ExtensionListContainer extends React.Component<ExtensionListContain
         this.setState({
             searchQuery: search || '',
             category: category || '',
-            sortBy: sortBy || 'relevance',
-            sortOrder: sortOrder || 'desc'
+            sortBy: sortBy || 'timestamp',
+            sortOrder: sortOrder || 'asc'
         });
     }
 
