@@ -28,7 +28,7 @@ services:
       - "db:pgsql-server"
 
   server:
-    image: smartide/smartide-openvsx:4a5546b
+    image: smartide/smartide-openvsx:271ca2c
     ports:
       - "8080:8080"
     volumes:
