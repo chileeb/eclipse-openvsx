@@ -80,7 +80,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 </Link>
             </MenuItem>
             <MenuItem className={classes.menuItem}>
-                <Link href='https://smartide.cn/zh/services/marketplace/ '>
+                <Link href='https://smartide.cn/zh/services '>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <ForumIcon className={classes.itemIcon} />
                         私有部署服务
@@ -88,7 +88,7 @@ export class MobileMenuContentComponent extends React.Component<WithStyles<typeo
                 </Link>
             </MenuItem>
             <MenuItem className={classes.menuItem}>
-                <RouteLink to='https://smartide.cn/zh/about/'>
+                <RouteLink to='https://smartide.cn/zh/about'>
                     <Typography variant='body2' color='textPrimary' className={classes.alignVertically}>
                         <InfoIcon className={classes.itemIcon} />
                         关于我们
@@ -114,7 +114,7 @@ export class DefaultMenuConentComponent extends React.Component<WithStyles<typeo
             <Link href='https://smartide.cn/zh/community' className={classes.headerItem}>
                 社区
             </Link>
-            <Link href='https://smartide.cn/zh/services/marketplace' className={classes.headerItem}>
+            <Link href='https://smartide.cn/zh/services' className={classes.headerItem}>
                 私有部署服务
             </Link>
             <Link href='https://smartide.cn/zh/about' className={classes.headerItem}>
