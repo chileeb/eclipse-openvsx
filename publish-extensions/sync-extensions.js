@@ -69,20 +69,20 @@ const Start = async () => {
 
   const promises = [];
 
-  for(let i = 0; i < extensionAllJson.data.totalSize/100; i++) {
-    if (((i+1)* 100) < extensionAllJson.data.totalSize) {
-      console.info(`开始同步第 ${i*100 +1 } 至 第 ${i* 100 + 100} 插件`);
-      log(`开始同步第 ${i*100 +1 } 至 第 ${i* 100 + 100} 插件`);
+  for(let i = 0; i < extensionAllJson.data.totalSize/50; i++) {
+    if (((i+1)* 50) < extensionAllJson.data.totalSize) {
+      console.info(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
+      log(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
     }
     else {
-      console.info(`开始同步第 ${i*100 +1 } 至 第 ${extensionAllJson.data.totalSize} 插件`);
-      log(`开始同步第 ${i*100 +1 } 至 第 ${extensionAllJson.data.totalSize0} 插件`);
+      console.info(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize} 插件同步任务加入队列`);
+      log(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize0} 插件同步任务加入队列`);
     }
 
-    let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*100}&size=100`;
+    let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     let extensionListJson = await urllib.request(`${extensionList}`, {
       dataType: 'json',
-      timeout: 100000,
+      timeout: 600000,
     });
 
     for (const extension of extensionListJson.data.extensions) {
@@ -162,11 +162,11 @@ const Start = async () => {
     }
   }
 
-
-
-
   // 限制并发 promise 数
-  await parallelRunPromise(promises, 3);
+  console.log('全部入列完毕, 启用多线程开始同步');
+  log('全部入列完毕, 启用多线程开始同步');
+
+  await parallelRunPromise(promises, 5);
   console.log('全部同步完毕');
   log('全部同步完毕');
 };
