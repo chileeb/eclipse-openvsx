@@ -69,9 +69,18 @@ const Start = async () => {
 
   const promises = [];
 
-  for(const i = 0; i < extensionAllJson.data.totalSize/100; i++) {
-    const extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*100}&size=100`;
-    const extensionListJson = await urllib.request(`${extensionList}`, {
+  for(let i = 0; i < extensionAllJson.data.totalSize/100; i++) {
+    if (((i+1)* 100) < extensionAllJson.data.totalSize) {
+      console.info(`开始同步第 ${i*100 +1 } 至 第 ${i* 100 + 100} 插件`);
+      log(`开始同步第 ${i*100 +1 } 至 第 ${i* 100 + 100} 插件`);
+    }
+    else {
+      console.info(`开始同步第 ${i*100 +1 } 至 第 ${extensionAllJson.data.totalSize} 插件`);
+      log(`开始同步第 ${i*100 +1 } 至 第 ${extensionAllJson.data.totalSize0} 插件`);
+    }
+
+    let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*100}&size=100`;
+    let extensionListJson = await urllib.request(`${extensionList}`, {
       dataType: 'json',
       timeout: 100000,
     });
