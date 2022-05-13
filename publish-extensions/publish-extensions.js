@@ -56,64 +56,57 @@ const Start = async () => {
   for (const extension of extensionAllJson.data.extensions) {
     if (extension.namespace && extension.name && extension.version) {
       promises.push(async () => {
+        for (const extensionVersion of extension.allVersions) {
           try {
-          console.info('开始发布: %s', extension.namespace, extension.name, extension.version);
-          log('开始发布: %s', extension.namespace, extension.name, extension.version);
-          const extensionFilePath = path.join(targetDir, path.basename(extension.files.download));
-          console.info('查找对应vsix文件路径: %s', extensionFilePath);
-          log('查找对应vsix文件路径: %s', extensionFilePath);
-          if (!fs.existsSync(extensionFilePath)) {
-            console.error('对应vsix文件不存在: %s', extensionFilePath);
-            log('对应vsix文件不存在: %s', extensionFilePath);
-            return;
-          }
+            if (extensionVersion.version && extensionVersion.files && extension.files.download) {
+              // 获取marketplace中的当前版本插件
+              const marketplaceExtensionVersion = await urllib.request(`${marketplaceapi}/${extension.namespace}/${extension.name}/${extensionVersion.version}`, {
+                dataType: 'json',
+                timeout: 100000,
+              });
+              if (marketplaceExtensionVersion && marketplaceExtensionVersion.status && marketplaceExtensionVersion.status !== 404) {
+                console.info(`[跳过] Marketplace 中已存在插件 ${extension.namespace}.${extension.name} 版本 ${extensionVersion.version}`);
+                log(`[跳过] Marketplace 中已存在插件 ${extension.namespace}.${extension.name} 版本 ${extensionVersion.version}`);
+                continue;
+              }
+              console.info('开始发布: %s', extension.namespace, extension.name, extensionVersion.version);
+              log('开始发布: %s', extension.namespace, extension.name, extensionVersion.version);
+              const extensionFilePath = path.join(targetDir, path.basename(extensionVersion.files.download));
+              console.info('查找对应vsix文件路径: %s', extensionFilePath);
+              log('查找对应vsix文件路径: %s', extensionFilePath);
+              if (!fs.existsSync(extensionFilePath)) {
+                console.error('对应vsix文件不存在: %s', extensionFilePath);
+                log('对应vsix文件不存在: %s', extensionFilePath);
+                return;
+              }
 
-          /** @type {import('ovsx').PublishOptions} */
-          let uploadOptions;
-          uploadOptions = { extensionFile: extensionFilePath };
+              /** @type {import('ovsx').PublishOptions} */
+              let uploadOptions;
+              uploadOptions = { extensionFile: extensionFilePath };
 
-          const { xmlManifest, manifest } = await readVSIXPackage(extensionFilePath);
-          const currentVersion = xmlManifest?.PackageManifest?.Metadata[0]?.Identity[0]['$']?.Version || manifest?.version;
+              const { xmlManifest, manifest } = await readVSIXPackage(extensionFilePath);
+              const currentVersion = xmlManifest?.PackageManifest?.Metadata[0]?.Identity[0]['$']?.Version || manifest?.version;
+              // 如果需要将创建namespace.
+              try {
+                await ovsx.createNamespace({ name: extension.namespace });
+                console.log(`创建 namespace ${extension.namespace} 成功!`);
+                log(`创建 namespace ${extension.namespace} 成功!`);
+              } catch (error) {
+                console.log(`创建 namespace ${extension.namespace} 失败！`);
+                log(`创建 namespace ${extension.namespace} 失败！`);
+                console.log(error);
+                log(error);
+              }
 
-          // 获取marketplace中的当前插件
-          const marketplaceExtension = await urllib.request(`${marketplaceapi}/${extension.namespace}/${extension.name}`, {
-            dataType: 'json',
-            timeout: 100000,
-          });
-          //对比版本
-          if (marketplaceExtension && marketplaceExtension.status && marketplaceExtension.status !== 404) {
-            console.info(`插件 ${extension.namespace}.${extension.name} 已存在, 进行版本对比`);
-            log(`插件 ${extension.namespace}.${extension.name} 已存在, 进行版本对比`);
-            if (!currentVersion) {
-              console.error(`插件包${extensionFilePath}中无版本信息`);
-              log(`插件包${extensionFilePath}中无版本信息`);
-              return;
+              await ovsx.publish(uploadOptions);
+              console.log(`[OK] Successfully published ${extension.namespace}.${extension.name}.${currentVersion} to Marketplace!`);
+              log(`[OK] Successfully published ${extension.namespace}.${extension.name}.${currentVersion} to Marketplace!`);
             }
-            if (semver.gt(marketplaceExtension.data.version, currentVersion)) {
-              console.info(`Marketplace 版本 ${marketplaceExtension.data.version} 比 vsix插件包版本更新，无需更新`);
-              log(`Marketplace 版本 ${marketplaceExtension.data.version} 比 vsix插件包版本更新，无需更新`);
-              return
-            }
-            if (semver.eq(marketplaceExtension.data.version, currentVersion)) {
-              console.log(`[跳过] Marketplace 中已存在相同版本内容`);
-              log(`[跳过] Marketplace 中已存在相同版本内容`);
-              return;
-            }
           }
-          // 如果需要将创建namespace.
-          try {
-            await ovsx.createNamespace({ name: extension.namespace });
-          } catch (error) {
-            console.log(`创建 namespace 失败！`);
-            log(`创建 namespace 失败！`);
-            console.log(error);
-            log(error);
+          catch (e) {
+            console.error(`${extension.namespace}.${extension.name}.${extensionVersion.version} 发布失败: ${e.message}`);
+            log(`${extension.namespace}.${extension.name}.${extensionVersion.version} 发布失败: ${e.message}`);
           }
-
-          await ovsx.publish(uploadOptions);
-          console.log(`[OK] Successfully published ${extension.namespace}.${extension.name} to Marketplace!`);
-        } catch(e) {
-          console.error(e);
         }
       });
     }

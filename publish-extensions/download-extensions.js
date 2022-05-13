@@ -54,7 +54,7 @@ const Start = async () => {
   log('清空 extension 目录: %s', targetDir);
   rimraf.sync(targetDir);
   mkdirp.sync(targetDir);
- 
+
   const extensionAllJson = await urllib.request(`${extensionAll}`, {
     dataType: 'json',
     timeout: 100000,
@@ -65,30 +65,35 @@ const Start = async () => {
   const promises = [];
 
   for (const extension of extensionAllJson.data.extensions) {
-    if (extension.namespace && extension.name && extension.files && extension.files.download) {
+    if (extension.namespace && extension.name && extension.allVersions && extension.files && extension.files.download) {
       promises.push(async () => {
-        console.info('开始下载: %s', extension.namespace, extension.name, extension.version);
-        log('开始下载: %s', extension.namespace, extension.name, extension.version);
-        console.info('下载地址: %s', extension.files.download);
-        log('下载地址: %s', extension.files.download);
-        try {
-          const vsixFile = path.join(targetDir, path.basename(extension.files.download));
-          const vsixStream = fs.createWriteStream(vsixFile);
-          const data = await got.default.stream(extension.files.download, { timeout: 100000 });
-        
-          data.pipe(vsixStream);
-          await Promise.race([awaitEvent(data, 'end'), awaitEvent(data, 'error')]);
-          vsixStream.close();
-          console.info('下载完毕: %s', vsixFile);
-          log('下载完毕: %s', vsixFile);
-        } catch (e) {
-          console.error(`${extension.namespace}.${extension.name} 插件下载失败: ${e.message}`);
-          log(`${extension.namespace}.${extension.name} 插件下载失败: ${e.message}`);
+        for (const extensionVersion of extension.allVersions) {
+          try {
+            if (extensionVersion.version && extensionVersion.files && extension.files.download) {
+              // 获取marketplace中的当前版本插件」
+              console.info('开始下载: %s', extension.namespace, extension.name, extensionVersion.version);
+              log('开始下载: %s', extension.namespace, extension.name, extensionVersion.version);
+              console.info('下载地址: %s', extensionVersion.files.download);
+              log('下载地址: %s', extensionVersion.files.download);
+              const vsixFile = path.join(targetDir, path.basename(extensionVersion.files.download));
+              const vsixStream = fs.createWriteStream(vsixFile);
+              const data = await got.default.stream(extensionVersion.files.download, { timeout: 100000 });
+              data.pipe(vsixStream);
+              await Promise.race([awaitEvent(data, 'end'), awaitEvent(data, 'error')]);
+              vsixStream.close();
+              console.info('下载完毕: %s', vsixFile);
+              log('下载完毕: %s', vsixFile);
+            }
+          }
+          catch (e) {
+            console.error(`${extension.namespace}.${extension.name}.${extensionVersion.version} 下载失败: ${e.message}`);
+            log(`${extension.namespace}.${extension.name}.${extensionVersion.version} 下载失败: ${e.message}`);
+          }
         }
       });
     }
   }
-  
+
   // 限制并发 promise 数
   await parallelRunPromise(promises, 3);
   console.log('全部下载完毕');
