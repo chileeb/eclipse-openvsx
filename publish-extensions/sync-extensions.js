@@ -69,7 +69,7 @@ const Start = async () => {
 
   const promises = [];
 
-  for(let i = 0; i < 4; i++) {
+  for(let i = 0; i < 2; i++) {
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
       console.info(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
       log(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
@@ -139,10 +139,14 @@ const Start = async () => {
                   console.log(`创建 namespace ${extension.namespace} 成功!`);
                   log(`创建 namespace ${extension.namespace} 成功!`);
                 } catch (error) {
-                  console.log(`创建 namespace ${extension.namespace} 失败！`);
-                  log(`创建 namespace ${extension.namespace} 失败！`);
-                  console.log(error);
-                  log(error);
+                  if(error.message.contains("Namespace already exists")) {
+                     console.log(`namespace ${extension.namespace} 已存在！`);
+                  } else {
+                     console.log(`创建 namespace ${extension.namespace} 失败！`);
+                     log(`创建 namespace ${extension.namespace} 失败！`);
+                     console.log(error);
+                     log(error);
+                  }
                 }
   
                 await ovsx.publish(uploadOptions);
