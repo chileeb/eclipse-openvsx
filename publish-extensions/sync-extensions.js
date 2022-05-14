@@ -69,7 +69,7 @@ const Start = async () => {
 
   const promises = [];
 
-  for(let i = 0; i < extensionAllJson.data.totalSize/50; i++) {
+  for(let i = 0; i < 4; i++) {
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
       console.info(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
       log(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
