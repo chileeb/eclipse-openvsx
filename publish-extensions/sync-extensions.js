@@ -139,7 +139,7 @@ const Start = async () => {
                   console.log(`创建 namespace ${extension.namespace} 成功!`);
                   log(`创建 namespace ${extension.namespace} 成功!`);
                 } catch (error) {
-                  if(error.message.contains("Namespace already exists")) {
+                  if(error.message.indexOf("Namespace already exists") > -1) {
                      console.log(`namespace ${extension.namespace} 已存在！`);
                   } else {
                      console.log(`创建 namespace ${extension.namespace} 失败！`);
