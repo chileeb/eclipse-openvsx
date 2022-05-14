@@ -68,18 +68,19 @@ const Start = async () => {
   log('插件总数: %s', extensionAllJson.data.totalSize);
 
   const promises = [];
-
-  for(let i = 0; i < 2; i++) {
+  let extensionCount = 0;
+  let extensionVersionCount = 0;
+  for(let i = 0; i < 1; i++) {
+ 
+    let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
-      console.info(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
-      log(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列`);
+      console.info(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列: ${extensionList}`);
+      log(`正在将第 ${i*50 +1 } 至 第 ${i* 50 + 50} 插件同步任务加入队列: ${extensionList}`);
     }
     else {
-      console.info(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize} 插件同步任务加入队列`);
-      log(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize0} 插件同步任务加入队列`);
+      console.info(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize} 插件同步任务加入队列: ${extensionList}`);
+      log(`正在将第 ${i*50 +1 } 至 第 ${extensionAllJson.data.totalSize0} 插件同步任务加入队列: ${extensionList}`);
     }
-
-    let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     let extensionListJson = await urllib.request(`${extensionList}`, {
       dataType: 'json',
       timeout: 600000,
@@ -87,6 +88,8 @@ const Start = async () => {
 
     for (const extension of extensionListJson.data.extensions) {
       if (extension.namespace && extension.name && extension.allVersions && extension.files && extension.files.download) {
+        extensionCount ++;
+        extensionVersionCount = extensionVersionCount + extension.allVersions.length;
         promises.push(async () => {
           // handle each version
           for (const extensionVersion of extension.allVersions) {
@@ -136,14 +139,14 @@ const Start = async () => {
                 // 如果需要将创建namespace.
                 try {
                   await ovsx.createNamespace({ name: extension.namespace });
-                  console.log(`创建 namespace ${extension.namespace} 成功!`);
-                  log(`创建 namespace ${extension.namespace} 成功!`);
+                  console.log(`[namespace] 创建 ${extension.namespace} 成功!`);
+                  log(`[namespace] 创建 ${extension.namespace} 成功!`);
                 } catch (error) {
                   if(error.message.indexOf("Namespace already exists") > -1) {
-                     console.log(`namespace ${extension.namespace} 已存在！`);
+                     console.log(`[namespace] ${extension.namespace} 已存在！`);
                   } else {
-                     console.log(`创建 namespace ${extension.namespace} 失败！`);
-                     log(`创建 namespace ${extension.namespace} 失败！`);
+                     console.log(`[namespace] 创建 ${extension.namespace} 失败！`);
+                     log(`[namespace] 创建 ${extension.namespace} 失败！`);
                      console.log(error);
                      log(error);
                   }
@@ -167,8 +170,8 @@ const Start = async () => {
   }
 
   // 限制并发 promise 数
-  console.log('全部入列完毕, 启用多线程开始同步');
-  log('全部入列完毕, 启用多线程开始同步');
+  console.log(`全部入列完毕, 启用多线程开始同步, 队列中待同步插件总数: ${extensionCount}, 插件版本总数 ${extensionVersionCount}`);
+  log(`全部入列完毕, 启用多线程开始同步, 队列中待同步插件总数: ${extensionCount}, 插件版本总数 ${extensionVersionCount}`);
 
   await parallelRunPromise(promises, 5);
   console.log('全部同步完毕');
