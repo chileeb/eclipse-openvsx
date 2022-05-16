@@ -70,7 +70,7 @@ const Start = async () => {
   const promises = [];
   let extensionCount = 0;
   let extensionVersionCount = 0;
-  for(let i = 0; i < 4; i++) {
+  for(let i = 4; i < 8; i++) {
  
     let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
@@ -91,6 +91,9 @@ const Start = async () => {
         extensionCount ++;
         extensionVersionCount = extensionVersionCount + extension.allVersions.length;
         promises.push(async () => {
+          let index = i * 50 + extensionListJson.data.extensions.indexOf(extension) + 1;
+          console.info(`------ 正在同步第 ${index} 位插件：${extension.namespace}.${extension.name} ------`);
+          log(`------ 正在同步第 ${index} 位插件：${extension.namespace}.${extension.name} ------`);
           let syncVersions = [];
           const marketplaceExtension = await urllib.request(`${marketplaceapi}/${extension.namespace}/${extension.name}`, {
             dataType: 'json',
