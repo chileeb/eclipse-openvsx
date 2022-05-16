@@ -102,7 +102,7 @@ const Start = async () => {
             console.info(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
             log(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
           } else {
-            let marketplaceVersions = Object.keys(marketplaceExtension.allVersions);
+            let marketplaceVersions = Object.keys(marketplaceExtension.data.allVersions);
             let openvsxVersions = extension.allVersions.map(item=>item.version);
             let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item));
             syncVersions = extension.allVersions.filter(item=> needSyncVersions.includes(item.version));
