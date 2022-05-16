@@ -70,7 +70,7 @@ const Start = async () => {
   const promises = [];
   let extensionCount = 0;
   let extensionVersionCount = 0;
-  for(let i = 20; i < 24; i++) {
+  for(let i = 24; i < 28; i++) {
  
     let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
