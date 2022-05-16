@@ -91,21 +91,29 @@ const Start = async () => {
         extensionCount ++;
         extensionVersionCount = extensionVersionCount + extension.allVersions.length;
         promises.push(async () => {
+          let syncVersions = [];
+          const marketplaceExtension = await urllib.request(`${marketplaceapi}/${extension.namespace}/${extension.name}`, {
+            dataType: 'json',
+            timeout: 100000,
+          });
+
+          if (marketplaceExtension && marketplaceExtension.status && marketplaceExtension.status == 404) {
+            syncVersions = extension.allVersions;
+            console.info(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
+            log(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
+          } else {
+            let marketplaceVersions = Object.keys(marketplaceExtension.allVersions);
+            let openvsxVersions = extension.allVersions.map(item=>item.version);
+            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item));
+            syncVersions = extension.allVersions.filter(item=> needSyncVersions.includes(item.version));
+            console.info(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+            log(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+          }
+
           // handle each version
-          for (const extensionVersion of extension.allVersions) {
+          for (const extensionVersion of syncVersions) {
             try {
               if (extensionVersion.version && extensionVersion.files && extension.files.download) {
-                // 获取marketplace中的当前版本插件
-                const marketplaceExtensionVersion = await urllib.request(`${marketplaceapi}/${extension.namespace}/${extension.name}/${extensionVersion.version}`, {
-                  dataType: 'json',
-                  timeout: 100000,
-                });
-                if (marketplaceExtensionVersion && marketplaceExtensionVersion.status && marketplaceExtensionVersion.status !== 404) {
-                  console.info(`[跳过] Marketplace 中已存在插件 ${extension.namespace}.${extension.name} 版本 ${extensionVersion.version}`);
-                  log(`[跳过] Marketplace 中已存在插件 ${extension.namespace}.${extension.name} 版本 ${extensionVersion.version}`);
-                  continue;
-                }
-  
                 //Download Extension Version
                 console.info(`开始下载: ${extension.namespace}.${extension.name}.${extensionVersion.version}`);
                 log(`开始下载: ${extension.namespace}.${extension.name}.${extensionVersion.version}`);
