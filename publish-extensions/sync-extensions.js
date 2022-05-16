@@ -70,7 +70,7 @@ const Start = async () => {
   const promises = [];
   let extensionCount = 0;
   let extensionVersionCount = 0;
-  for(let i = 0; i < 1; i++) {
+  for(let i = 0; i < 4; i++) {
  
     let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
@@ -104,10 +104,15 @@ const Start = async () => {
           } else {
             let marketplaceVersions = Object.keys(marketplaceExtension.data.allVersions);
             let openvsxVersions = extension.allVersions.map(item=>item.version);
-            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item));
+            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item)).slice(0,5);
             syncVersions = extension.allVersions.filter(item=> needSyncVersions.includes(item.version));
-            console.info(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
-            log(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+            if(syncVersions.length == 0) {
+              console.info(`[跳过] ${extension.namespace}.${extension.name}: 所有版本均同步完毕！`);
+              log(`[跳过] ${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+             } else {
+              console.info(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+              log(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+             }
           }
 
           // handle each version
@@ -181,7 +186,7 @@ const Start = async () => {
   console.log(`全部入列完毕, 启用多线程开始同步, 队列中待同步插件总数: ${extensionCount}, 插件版本总数 ${extensionVersionCount}`);
   log(`全部入列完毕, 启用多线程开始同步, 队列中待同步插件总数: ${extensionCount}, 插件版本总数 ${extensionVersionCount}`);
 
-  await parallelRunPromise(promises, 5);
+  await parallelRunPromise(promises, 3);
   console.log('全部同步完毕');
   log('全部同步完毕');
 };
