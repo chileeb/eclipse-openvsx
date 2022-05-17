@@ -70,7 +70,7 @@ const Start = async () => {
   const promises = [];
   let extensionCount = 0;
   let extensionVersionCount = 0;
-  for(let i = 28; i < extensionAllJson.data.totalSize/50; i++) {
+  for(let i = 0; i < extensionAllJson.data.totalSize/50; i++) {
  
     let extensionList = `https://open-vsx.org/api/-/search?includeAllVersions=true&sortBy=timestamp&sortOrder=desc&offset=${i*50}&size=50`;
     if (((i+1)* 50) < extensionAllJson.data.totalSize) {
@@ -107,7 +107,7 @@ const Start = async () => {
           } else {
             let marketplaceVersions = Object.keys(marketplaceExtension.data.allVersions);
             let openvsxVersions = extension.allVersions.map(item=>item.version);
-            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item)).slice(0,5);
+            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item)).slice(0,1);
             syncVersions = extension.allVersions.filter(item=> needSyncVersions.includes(item.version));
             if(syncVersions.length == 0) {
               console.info(`[跳过] ${extension.namespace}.${extension.name}: 所有版本均同步完毕！`);
