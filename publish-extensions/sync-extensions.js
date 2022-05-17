@@ -52,6 +52,7 @@ const parallelRunPromise = (lazyPromises, n) => {
 
 const extensionAll = 'https://open-vsx.org/api/-/search';
 const marketplaceapi = 'https://marketplace.smartide.cn/api';
+const syncHistoryVersionCount = 1;
 
 const Start = async () => {
 
@@ -101,17 +102,17 @@ const Start = async () => {
           });
 
           if (marketplaceExtension && marketplaceExtension.status && marketplaceExtension.status == 404) {
-            syncVersions = extension.allVersions;
-            console.info(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
-            log(`${extension.namespace}.${extension.name}: 所有版本均需同步!`);
+            syncVersions = extension.allVersions.slice(0,syncHistoryVersionCount);
+            console.info(`${extension.namespace}.${extension.name}: 未同步过此插件，待同步版本为 ${syncVersions.map(item=>item.version).toString()}`);
+            log(`${extension.namespace}.${extension.name}: 未同步过此插件，待同步版本为 ${syncVersions.map(item=>item.version).toString()}`);
           } else {
             let marketplaceVersions = Object.keys(marketplaceExtension.data.allVersions);
             let openvsxVersions = extension.allVersions.map(item=>item.version);
-            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item)).slice(0,1);
+            let needSyncVersions = openvsxVersions.concat(marketplaceVersions).filter(item=> !marketplaceVersions.includes(item)).slice(0,syncHistoryVersionCount);
             syncVersions = extension.allVersions.filter(item=> needSyncVersions.includes(item.version));
             if(syncVersions.length == 0) {
               console.info(`[跳过] ${extension.namespace}.${extension.name}: 所有版本均同步完毕！`);
-              log(`[跳过] ${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
+              log(`[跳过] ${extension.namespace}.${extension.name}: 所有版本均同步完毕！`);
              } else {
               console.info(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
               log(`${extension.namespace}.${extension.name}: 已存在部分版本，待同步版本为 ${needSyncVersions.toString()}`);
