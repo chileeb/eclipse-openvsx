@@ -33,10 +33,8 @@ management:
       enabled: true
 
 ovsx:
-  databasesearch:
-    enabled: true
   elasticsearch:
-    enabled: false
+    host: elasticsearch-server:9200
   eclipse:
     base-url: https://api.eclipse.org
     publisher-agreement:
