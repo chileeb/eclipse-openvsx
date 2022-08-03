@@ -1,0 +1,28 @@
+name: SmartIDE-OpenVSX-Restart
+
+on:
+  push:
+    branches:    
+      - smartide-marketplace
+    paths: 
+      - .github/workflows/smartide-openvsx-restart.yml
+    schedule:
+    - cron: "0 20 * * *"
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Docker-Compose Restart via SSH action
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_SSH_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          # docker-compose restart
+          cd ~/openvsx/deployment/openvsx
+          docker-compose -p openvsx restart
