@@ -6,7 +6,7 @@ on:
       - smartide-marketplace
     paths: 
       - .github/workflows/smartide-openvsx-restart.yml
-    schedule:
+  schedule:
     - cron: "0 20 * * *"
 
 jobs:
