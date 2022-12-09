@@ -18,8 +18,8 @@ import com.google.common.io.ByteStreams;
 
 public final class ArchiveUtil {
 
-    // Limit the size of fetched zip entries to 32 MB
-    private static final long MAX_ENTRY_SIZE = 33_554_432;
+    // Limit the size of fetched zip entries to 256 MB
+    private static final long MAX_ENTRY_SIZE = 268_435_456;
 
     private ArchiveUtil() {}
 
@@ -40,7 +40,7 @@ public final class ArchiveUtil {
     public static byte[] readEntry(ZipFile archive, ZipEntry entry) {
         try {
             if (entry.getSize() > MAX_ENTRY_SIZE)
-                throw new ErrorResultException("The file " + entry.getName() + " exceeds the size limit of 32 MB.");
+                throw new ErrorResultException("The file " + entry.getName() + " exceeds the size limit of 256 MB.");
             return ByteStreams.toByteArray(archive.getInputStream(entry));
         } catch (ZipException exc) {
             throw new ErrorResultException("Could not read zip file: " + exc.getMessage(), exc);
